@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-type">
+  {% if page_info.page_type == 'index' %}
+    <p>index</p>
+  {% elif page_info.page_type == 'archive' %}
+    <p>archive</p>
+  {% elif page_info.page_type == 'tag' %}
+    <p>tag</p>
+  {% endif %}
+</div>
+<div class="posts">
+    {% for post in page_info.post_list %}
+        <section class="post" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+            <a href="/blog/blog={{ post.blog_id }}">
+            <header class="post-header">
+                <h2 class="post-title">{{ post.title }}</h2>
+            </header>
+            {% if page_info.page_type != 'archive' %}
+            <div class="post-digest">
+                {{ post.content | striptags }}
+            </div>
+            {% endif %}
+            </a>
+            <p class="post-meta" style="font-family: Verdana, Geneva, sans-serif;">Posted on {{ post.pub_date|date:"M d, Y" }} 
+                {% for tag in post.show_tag %}
+                <a class="post-category" href="http://www.rim99.com/blog/tag={{ tag }}">{{ tag }}</a>
+                {% endfor %}
+            </p>
+        </section>
+    {% endfor %}
+    
+    {% if page_info.has_previous or page_info.has_next %}
+      <div>
+      <ul class="pager">
+      {% if page_info.has_previous %}
+        <a href="page={{ page_info.page | add:"-1" }}"><li class="prev" style="text-decoration: none;">← Previous Posts</li></a>
+      {% endif %}
+
+      {% if page_info.has_next %}
+        <a href="page={{ page_info.page | add:"+1" }}"><li class="next" style="text-decoration: none;">Older Posts →</li></a>
+      {% endif %}
+      </ul>
+      </div>
+    {% endif %}
+    
+    
+</div>
+{% endblock %}
